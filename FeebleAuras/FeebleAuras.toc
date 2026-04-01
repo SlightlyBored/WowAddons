@@ -1,0 +1,10 @@
+## Interface: 120001
+## Title: Feeble Auras
+## Notes: Personalised replacements for what I would have been doing with weakauras
+## Author: SlightlyBored13
+## Version: 12.0.1
+## RequiredDeps:
+## SavedVariables: FeebleAurasGlobalData
+## SavedVariablesPerCharacter: FeebleAurasCharacterData
+
+FeebleAuras.lua
