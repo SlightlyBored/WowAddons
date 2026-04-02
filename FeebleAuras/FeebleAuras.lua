@@ -177,14 +177,19 @@ end
 function ToggleLogging(active)
     if LoggingState == nil or LoggingState ~= active then
         local now = GetTime()
-        if active == false and now - LastInstanceExit > 5 then
+        local result
+        if active == false then
+            if LastInstanceExit == nil or now - LastInstanceExit > 5 then
+                result = LoggingCombat(active)
+            end
             LastInstanceExit = now
+        else
+            result = LoggingCombat(active)
         end
 
-        local result = LoggingCombat(active)
         if result == nil then
             print ("Combat Logging rate limited, last seen", LoggingState and "on" or "off")
-        else
+        elseif result == false or result ~= LoggingState then
             print ("Combat Logging", result and "enabled" or "disabled" )
             LoggingState = result
         end
