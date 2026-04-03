@@ -155,14 +155,14 @@ function Activate(active)
         if active then
             eventListenerFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
             eventListenerFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
-            if CurrentlyActive ~= nil and Loaded >= 2 then
+            if CurrentlyActive ~= nil and Loaded >= 2 and CurrentlyActive ~= active then
                 print ("Damage Meter Auto-Toggle Enabled")
             end
             CurrentlyActive = true
         else
             eventListenerFrame:UnregisterEvent("PLAYER_REGEN_ENABLED")
             eventListenerFrame:UnregisterEvent("PLAYER_REGEN_DISABLED")
-            if CurrentlyActive ~= nil and Loaded >= 2 then
+            if CurrentlyActive ~= nil and Loaded >= 2 and CurrentlyActive ~= active then
                 print ("Damage Meter Auto-Toggle Disabled")
             end
             CurrentlyActive = false
@@ -222,6 +222,7 @@ local function EventHandler(self, event, ...)
         local inCombat = InCombatLockdown()
         ToggleMeter(not inCombat)
     elseif event == "PLAYER_ENTERING_WORLD" or event == "ZONE_CHANGED_NEW_AREA" then
+        eventListenerFrame:UnregisterEvent("PLAYER_ENTERING_WORLD")
         local _, instanceType = IsInInstance()
         if instanceType == "scenario" or instanceType == "party" or instanceType == "raid" then
             local _, _, difficultyID, difficultyName = GetInstanceInfo()
