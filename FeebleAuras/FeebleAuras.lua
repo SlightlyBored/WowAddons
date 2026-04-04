@@ -3,6 +3,11 @@ local CurrentlyActive = false
 local LastInstanceExit
 local LoggingState
 
+function Trim(s)
+   local n = s:find"%S"
+   return n and s:match(".*%S", n) or ""
+end
+
 local colours = {
     ["lightred"] = "ff9999",
     ["lightgreen"] = "90ee90",
@@ -156,14 +161,14 @@ function Activate(active)
             eventListenerFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
             eventListenerFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
             if CurrentlyActive ~= nil and Loaded >= 2 and CurrentlyActive ~= active then
-                print ("Damage Meter Auto-Toggle Enabled")
+                print ("Damage meter auto-toggle enabled")
             end
             CurrentlyActive = true
         else
             eventListenerFrame:UnregisterEvent("PLAYER_REGEN_ENABLED")
             eventListenerFrame:UnregisterEvent("PLAYER_REGEN_DISABLED")
             if CurrentlyActive ~= nil and Loaded >= 2 and CurrentlyActive ~= active then
-                print ("Damage Meter Auto-Toggle Disabled")
+                print ("Damage meter auto-toggle disabled")
             end
             CurrentlyActive = false
         end
@@ -189,7 +194,7 @@ function ToggleLogging(active)
 
         if result == nil then
             print ("Combat Logging rate limited, last seen", LoggingState and "on" or "off")
-        elseif result == false or result ~= LoggingState then
+        elseif (result == false or result ~= LoggingState) and Loaded >= 2 then
             print ("Combat Logging", result and "enabled" or "disabled" )
             LoggingState = result
         end
@@ -226,7 +231,7 @@ local function EventHandler(self, event, ...)
         local _, instanceType = IsInInstance()
         if instanceType == "scenario" or instanceType == "party" or instanceType == "raid" then
             local _, _, difficultyID, difficultyName = GetInstanceInfo()
-            print ("Entering", instanceType, ", difficulty =", difficultyName .. " (" .. tostring(difficultyID) .. ")")
+            print ("Entering", Trim(instanceType), ", difficulty =", difficultyName .. " (" .. tostring(difficultyID) .. ")")
             if validDifficulties[difficultyID] then
                 -- enable auto
                 AutoActivate(true)
@@ -429,7 +434,7 @@ local function HandleCommand(alias, root, msg)
     if not arg or arg == "" then
         if not CallHandler(root) then
             print("Invalid command \"".. AddColour(arg, "lightred") .. "\"")
-            HandleCommand(alias, root, "help c")
+            HandleCommand(alias, root, "help c") --recursive
         end
         return
     end
