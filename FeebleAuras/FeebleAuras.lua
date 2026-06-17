@@ -3,11 +3,6 @@ local CurrentlyActive = false
 local LastInstanceExit
 local LoggingState
 
-function Trim(s)
-   local n = s:find"%S"
-   return n and s:match(".*%S", n) or ""
-end
-
 local colours = {
     ["lightred"] = "ff9999",
     ["lightgreen"] = "90ee90",
@@ -114,7 +109,7 @@ local validDifficulties = {
     [14] = "Normal Raid",
     [15] = "Heroic Raid",
     [16] = "Mythic Raid",
-    [208] = "Delve 5",
+    [233] = "Flexible Raid",
 }
 
 local DamageMeter
@@ -231,7 +226,7 @@ local function EventHandler(self, event, ...)
         local _, instanceType = IsInInstance()
         if instanceType == "scenario" or instanceType == "party" or instanceType == "raid" then
             local _, _, difficultyID, difficultyName = GetInstanceInfo()
-            print ("Entering", Trim(instanceType), ", difficulty =", difficultyName .. " (" .. tostring(difficultyID) .. ")")
+            print ("Entering", instanceType .. ", difficulty =", difficultyName .. " (" .. tostring(difficultyID) .. ")")
             if validDifficulties[difficultyID] then
                 -- enable auto
                 AutoActivate(true)
